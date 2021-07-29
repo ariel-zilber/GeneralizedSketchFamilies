@@ -7,7 +7,6 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -56,10 +55,10 @@ public class GeneralSketchGeneralVSkt {
 	private static String dataSummaryForFlowSpread;
 
 	//
-	private static String basePath;
+	private static String resultsDir;
 
-	public static void setBasePath(String basePath) {
-		GeneralSketchGeneralVSkt.basePath = basePath;
+	public static void setResultsDir(String resultsDir) {
+		GeneralSketchGeneralVSkt.resultsDir = resultsDir;
 	}
 
 
@@ -172,7 +171,7 @@ public class GeneralSketchGeneralVSkt {
 		System.out.println("Estimating Flow SIZEs..." ); 
 		Scanner sc = new Scanner(new File(filePath));
 		System.out.println(filePath);
-		String resultFilePath =basePath + "results\\VSketch\\size\\v" + C[0].getDataStructureName()
+		String resultFilePath = resultsDir + "\\VSketch\\size\\v" + C[0].getDataStructureName()
 				+ "_M_" +  M / 1024 / 1024 + "_u_" + u + "_m_" + m;
 		PrintWriter pw = new PrintWriter(new File(resultFilePath));
 		System.out.println("Result directory: " + resultFilePath); 
@@ -220,7 +219,7 @@ public class GeneralSketchGeneralVSkt {
 	public static void estimateSpread(String filePath) throws FileNotFoundException {
 		System.out.println("Estimating Flow CARDINALITY..." ); 
 		Scanner sc = new Scanner(new File(filePath));
-		String resultFilePath = basePath + "results\\VSketch\\spread\\v" + C[0].getDataStructureName()
+		String resultFilePath = resultsDir + "\\VSketch\\spread\\v" + C[0].getDataStructureName()
 				+ "_M_" +  M / 1024 / 1024 + "_u_" + u + "_m_" + m;
 		PrintWriter pw = new PrintWriter(new File(resultFilePath));
 		for (int t = 0; t < m; t++) {

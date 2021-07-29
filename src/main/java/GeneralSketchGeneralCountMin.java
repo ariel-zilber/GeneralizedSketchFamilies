@@ -7,7 +7,6 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -64,10 +63,10 @@ public class GeneralSketchGeneralCountMin {
 
 
     //
-    private static String basePath;
+    private static String resultsDir;
 
-    public static void setBasePath(String basePath) {
-        GeneralSketchGeneralCountMin.basePath = basePath;
+    public static void setResultsDir(String resultsDir) {
+        GeneralSketchGeneralCountMin.resultsDir = resultsDir;
     }
 
 
@@ -192,7 +191,7 @@ public class GeneralSketchGeneralCountMin {
     public static void estimateSize(String filePath) throws FileNotFoundException {
         System.out.println("Estimating Flow SIZEs...");
         Scanner sc = new Scanner(new File(filePath));
-        String resultFilePath = basePath + "results\\CSketch\\size\\" + C[0][0].getDataStructureName()
+        String resultFilePath = resultsDir + "\\CSketch\\size\\" + C[0][0].getDataStructureName()
                 + "_M_" + M / 1024 / 1024 + "_d_" + d + "_u_" + u + "_m_" + m;
         PrintWriter pw = new PrintWriter(new File(resultFilePath));
         System.out.println("Result directory: " + resultFilePath);
@@ -243,7 +242,7 @@ public class GeneralSketchGeneralCountMin {
     public static void estimateSpread(String filepath) throws FileNotFoundException {
         System.out.println("Estimating Flow CARDINALITY...");
         Scanner sc = new Scanner(new File(filepath));
-        String resultFilePath = basePath + "results\\CSketch\\spread\\" + C[0][0].getDataStructureName()
+        String resultFilePath = resultsDir + "\\CSketch\\spread\\" + C[0][0].getDataStructureName()
                 + "_M_" + M / 1024 / 1024 + "_d_" + d + "_u_" + u + "_m_" + m;
         PrintWriter pw = new PrintWriter(new File(resultFilePath));
         System.out.println("Result directory: " + resultFilePath);

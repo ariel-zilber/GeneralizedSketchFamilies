@@ -1,2 +1,6 @@
 GeneralSketchGeneralSketchBloomTests.java
  GeneralSketchGeneralSketchBloomTests
+GeneralSketchGeneralVSktTests.java
+ GeneralSketchGeneralVSktTests
+GeneralSketchGeneralCountMinTests.java
+ GeneralSketchGeneralCountMinTests

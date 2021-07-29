@@ -22,8 +22,6 @@ GeneralUnionGeneralSketchBloom.java
  GeneralUnionGeneralSketchBloom
 Counter.java
  Counter
-utils/TestUtils.java
- utils.TestUtils
 GeneralSketchGeneralCountMin.java
  GeneralSketchGeneralCountMin
 GeneralDataStructure.java
