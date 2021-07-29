@@ -17,20 +17,18 @@ public class GeneralUnionGeneralSketchBloomTests {
                 CURRENT_DIR + "\\src\\test\\results\\"
         );
 
-
         for (int i : GeneralUnionGeneralSketchBloom.sizeMeasurementConfig) {
-            GeneralUnionGeneralSketchBloom. initCM(i);
-            GeneralUnionGeneralSketchBloom.  encodeSize(dataStream.getDataStreamForFlowSize());
-            GeneralUnionGeneralSketchBloom.   estimateSize(dataStream.getDataSummaryForFlowSize());
+            GeneralUnionGeneralSketchBloom.initCM(i);
+            GeneralUnionGeneralSketchBloom.encodeSize(dataStream.getDataStreamForFlowSize());
+            GeneralUnionGeneralSketchBloom.estimateSize(dataStream.getDataSummaryForFlowSize());
         }
 
-        /** measurment for flow spreads **/
+        /** measurements for flow spreads **/
         for (int i : GeneralUnionGeneralSketchBloom.spreadMeasurementConfig) {
-            GeneralUnionGeneralSketchBloom.     initCM(i);
-            GeneralUnionGeneralSketchBloom.    encodeSpread(dataStream.getDataStreamForFlowSpread());
-            GeneralUnionGeneralSketchBloom.    estimateSpread(dataStream.getDataSummaryForFlowSpread());
+            GeneralUnionGeneralSketchBloom.initCM(i);
+            GeneralUnionGeneralSketchBloom.encodeSpread(dataStream.getDataStreamForFlowSpread());
+            GeneralUnionGeneralSketchBloom.estimateSpread(dataStream.getDataSummaryForFlowSpread());
         }
-
 
         System.out.println("DONE!****************************");
     }
