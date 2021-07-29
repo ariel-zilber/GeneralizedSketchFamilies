@@ -5,10 +5,8 @@ import utils.MeasurementUtils;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -65,10 +63,10 @@ public class GeneralTimeGeneralSketchBloom {
 
 
     public static int periods = 1;
-    private static String basePath;
+    private static String resultsDir;
 
-    public static void setBasePath(String basePath) {
-        GeneralTimeGeneralSketchBloom.basePath = basePath;
+    public static void setResultsDir(String resultsDir) {
+        GeneralTimeGeneralSketchBloom.resultsDir = resultsDir;
     }
 
 
@@ -229,7 +227,7 @@ public class GeneralTimeGeneralSketchBloom {
         System.out.println("Estimating Flow SIZEs...");
         Scanner sc = new Scanner(new File(filePath + periods + "\\outputsrcDstCount.txt"));
         System.out.println(filePath + periods + "\\outputsrcDstCount.txt");
-        String resultFilePath = basePath + "results\\bSketch\\size\\" + C[0][0].getDataStructureName()
+        String resultFilePath = resultsDir + "bSketch\\size\\" + C[0][0].getDataStructureName()
                 + "_M_" + M / 1024 / 1024 + "_d_" + d + "_u_" + u + "_m_" + m + "_TT_" + periods;
         PrintWriter pw = new PrintWriter(new File(resultFilePath));
         System.out.println("w :" + w);
@@ -290,7 +288,7 @@ public class GeneralTimeGeneralSketchBloom {
         System.out.println("Estimating Flow CARDINALITY...");
         Scanner sc = new Scanner(new File(filepath + periods + "\\outputdstCard.txt"));
         System.out.println(filepath + periods + "\\outputdstCard.txt");
-        String resultFilePath = basePath + "results\\SketchBloom\\spread\\" + C[0][0].getDataStructureName()
+        String resultFilePath = resultsDir + "SketchBloom\\spread\\" + C[0][0].getDataStructureName()
                 + "_M_" + M / 1024 / 1024 + "_d_" + d + "_u_" + u + "_m_" + m + "_TT_" + periods;
         PrintWriter pw = new PrintWriter(new File(resultFilePath));
         System.out.println("Result directory: " + resultFilePath);

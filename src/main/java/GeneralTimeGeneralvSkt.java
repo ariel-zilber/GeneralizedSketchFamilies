@@ -4,7 +4,6 @@ import utils.MeasurementUtils;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
@@ -66,10 +65,10 @@ public class GeneralTimeGeneralvSkt {
 
 
     public static int periods = 1;
-    private static String basePath;
+    private static String resultsDir;
 
-    public static void setBasePath(String basePath) {
-        GeneralTimeGeneralvSkt.basePath = basePath;
+    public static void setResultsDir(String resultsDir) {
+        GeneralTimeGeneralvSkt.resultsDir = resultsDir;
     }
 
 
@@ -209,7 +208,6 @@ public class GeneralTimeGeneralvSkt {
         n = 0;
         for (int t = 0; t < periods; t++) {
             Scanner sc = new Scanner(new File(filePath + "output" + t + "v.txt"));
-
             System.out.println("Input file: " + filePath + "output" + t + "v.txt");
             while (sc.hasNextLine()) {
                 String entry = sc.nextLine();
@@ -236,7 +234,7 @@ public class GeneralTimeGeneralvSkt {
         Scanner sc = new Scanner(new File(filePath + periods + "\\outputsrcDstCount.txt"));
         System.out.println(filePath + periods + "\\outputsrcDstCount.txt");
 
-        String resultFilePath = basePath + "results\\VSketch\\size\\v" + C[0].getDataStructureName()
+        String resultFilePath = resultsDir + "VSketch\\size\\v" + C[0].getDataStructureName()
                 + "_M_" + M / 1024 / 1024 + "_u_" + u + "_m_" + m + "_TT_" + periods;
         PrintWriter pw = new PrintWriter(new File(resultFilePath));
         System.out.println("Result directory: " + resultFilePath);
@@ -247,7 +245,6 @@ public class GeneralTimeGeneralvSkt {
         int totalSum = B[0].getValue();
         while (sc.hasNextLine()) {
             String entry = sc.nextLine();
-
             String[] strs = entry.split("\\s+");
             long flowid = MeasurementUtils.getSize1FlowID(strs, true);
             int num = Integer.parseInt(strs[strs.length - 1]);
@@ -298,7 +295,7 @@ public class GeneralTimeGeneralvSkt {
         Scanner sc = new Scanner(new File(filePath + periods + "\\outputdstCard.txt"));
         System.out.println(filePath + periods + "\\outputdstCard.txt");
 
-        String resultFilePath = basePath + "results\\VSketch\\spread\\v" + C[0].getDataStructureName()
+        String resultFilePath = resultsDir + "VSketch\\spread\\v" + C[0].getDataStructureName()
                 + "_M_" + M / 1024 / 1024 + "_u_" + u + "_m_" + m + "_TT_" + periods;
         PrintWriter pw = new PrintWriter(new File(resultFilePath));
         System.out.println("Result directory: " + resultFilePath);

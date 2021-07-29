@@ -4,7 +4,6 @@ import utils.MeasurementUtils;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
@@ -57,10 +56,10 @@ public class GeneralUnionGeneralvSkt {
 	public static int periods = 1;
 
 
-	private static String basePath;
+	private static String resultsDir;
 
-	public static void setBasePath(String basePath) {
-		GeneralUnionGeneralvSkt.basePath = basePath;
+	public static void setResultsDir(String resultsDir) {
+		GeneralUnionGeneralvSkt.resultsDir = resultsDir;
 	}
 
 	// Init the vSketch noise approach for different elementary data structures.
@@ -187,11 +186,12 @@ public class GeneralUnionGeneralvSkt {
 			while (sc.hasNextLine()) {
 				String entry = sc.nextLine();
 				String[] strs = entry.split("\\s+");
+				System.out.println(entry);
 				long flowid=MeasurementUtils.getSize1FlowID(strs, true);
-		        n++;		
+		        n++;
+		        // segment encode, number of segments
 		        CP[t][0].encodeSegment(flowid, S, w / m);
 			}
-			sc.close();
 			sc.close();
 		}
 		for (int t = 0; t < periods; t++) {
@@ -205,7 +205,7 @@ public class GeneralUnionGeneralvSkt {
 	public static void estimateSize(String filePath) throws FileNotFoundException {
 		System.out.println("Estimating Flow SIZEs..." ); 
 		Scanner sc = new Scanner(new File(filePath));
-		String resultFilePath = basePath + "results\\VSketch\\size\\v" + C[0].getDataStructureName()
+		String resultFilePath = resultsDir + "VSketch\\size\\v" + C[0].getDataStructureName()
 				+ "_M_" +  M / 1024 / 1024 + "_u_" + u + "_m_" + m + "_TS_" + periods;
 		PrintWriter pw = new PrintWriter(new File(resultFilePath));
 		System.out.println("Result directory: " + resultFilePath); 
@@ -262,7 +262,7 @@ public class GeneralUnionGeneralvSkt {
 	public static void estimateSpread(String filePath) throws FileNotFoundException {
 		System.out.println("Estimating Flow CARDINALITY..." ); 
 		Scanner sc = new Scanner(new File(filePath));
-		String resultFilePath = basePath + "results\\VSketch\\spread\\v" + C[0].getDataStructureName()
+		String resultFilePath = resultsDir + "VSketch\\spread\\v" + C[0].getDataStructureName()
 				+ "_M_" +  M / 1024 / 1024 + "_u_" + u + "_m_" + m + "_TS_" + periods;;
 		PrintWriter pw = new PrintWriter(new File(resultFilePath));
 		System.out.println("Result directory: " + resultFilePath); 

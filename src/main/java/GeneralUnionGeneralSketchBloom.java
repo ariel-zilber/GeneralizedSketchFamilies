@@ -5,10 +5,8 @@ import utils.MeasurementUtils;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -69,10 +67,10 @@ public class GeneralUnionGeneralSketchBloom {
 
     public static int periods = 1;
 
-    private static String basePath;
+    private static String resultsDir;
 
-    public static void setBasePath(String basePath) {
-        GeneralUnionGeneralSketchBloom.basePath = basePath;
+    public static void setResultsDir(String resultsDir) {
+        GeneralUnionGeneralSketchBloom.resultsDir = resultsDir;
     }
 
     // Generate bSkt(counter) for flow size measurement.
@@ -232,7 +230,7 @@ public class GeneralUnionGeneralSketchBloom {
         System.out.println("Estimating Flow SIZEs...");
         System.out.println(filePath);
         Scanner sc = new Scanner(new File(filePath));
-        String resultFilePath = basePath+ "results\\BSketch\\size\\" + C[0][0].getDataStructureName()
+        String resultFilePath = resultsDir + "BSketch\\size\\" + C[0][0].getDataStructureName()
                 + "_M_" + M / 1024 / 1024 + "_d_" + d + "_u_" + u + "_m_" + m + "_TS_" + periods;
         PrintWriter pw = new PrintWriter(new File(resultFilePath));
         System.out.println("w :" + w);
@@ -293,7 +291,7 @@ public class GeneralUnionGeneralSketchBloom {
     public static void estimateSpread(String filepath) throws FileNotFoundException {
         System.out.println("Estimating Flow CARDINALITY...");
         Scanner sc = new Scanner(new File(filepath));
-        String resultFilePath = basePath + "results\\BSketch\\spread\\" + C[0][0].getDataStructureName()
+        String resultFilePath = resultsDir + "BSketch\\spread\\" + C[0][0].getDataStructureName()
                 + "_M_" + M / 1024 / 1024 + "_d_" + d + "_u_" + u + "_m_" + m + "_TS_" + periods;
         PrintWriter pw = new PrintWriter(new File(resultFilePath));
         System.out.println("Result directory: " + resultFilePath);
