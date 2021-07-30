@@ -19,6 +19,10 @@ def calculate_l1_error(path):
         total_diff_l1=total_diff_l1+diff
     return total_diff_l1
 
+## todo create function to display grahs
+
+
+
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
 print(calculate_l1_error(dir_path+"\\VSketch\\size\\vBitmap_M_16_u_1_m_10000"))
