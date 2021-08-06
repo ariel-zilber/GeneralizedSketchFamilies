@@ -136,14 +136,14 @@ public class GeneralSketchGeneralCountMin {
     }
 
     // Generate cSketch(HLL) for flow size/spread measurement.
-    public static HyperLogLog[][] generateHyperLogLog() {
+    public static VIHyperLogLog[][] generateHyperLogLog() {
         m = mValueHLL;
         u = HLLSize * mValueHLL;
         w = (M / u) / d;
-        HyperLogLog[][] B = new HyperLogLog[d][w];
+        VIHyperLogLog[][] B = new VIHyperLogLog[d][w];
         for (int i = 0; i < d; i++) {
             for (int j = 0; j < w; j++) {
-                B[i][j] = new HyperLogLog(mValueHLL, HLLSize);
+                B[i][j] = new VIHyperLogLog(mValueHLL, HLLSize);
             }
         }
         return B;

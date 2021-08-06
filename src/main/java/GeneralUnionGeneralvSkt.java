@@ -71,7 +71,7 @@ public class GeneralUnionGeneralvSkt {
 	                 break;
 	        case 2:  D = new FMSketch[1]; D[0] = new FMSketch(mValueFM, FMsketchSize);
 	                 break;
-	        case 3:  D = new HyperLogLog[1]; D[0] = new HyperLogLog(mValueHLL, HLLSize);
+	        case 3:  D = new VIHyperLogLog[1]; D[0] = new VIHyperLogLog(mValueHLL, HLLSize);
 	                 break;
 	        default: break;
 		}
@@ -145,16 +145,16 @@ public class GeneralUnionGeneralvSkt {
 	}
 	
 	// Generate vSkt(HLL) for flow size/spread measurement.
-	public static HyperLogLog[] generateHyperLogLog() {
+	public static VIHyperLogLog[] generateHyperLogLog() {
 		m = mValueHLL;
 		u = HLLSize;
 		w = M / u;
-		HyperLogLog[] B = new HyperLogLog[1];
-		B[0] = new HyperLogLog(w, HLLSize);
+		VIHyperLogLog[] B = new VIHyperLogLog[1];
+		B[0] = new VIHyperLogLog(w, HLLSize);
 		
-		HyperLogLog[][] BP = new HyperLogLog[periods][1];
+		VIHyperLogLog[][] BP = new VIHyperLogLog[periods][1];
 		for(int t = 0; t < periods; t++) {
-			BP[t][0] = new HyperLogLog(w, HLLSize);
+			BP[t][0] = new VIHyperLogLog(w, HLLSize);
 		}
 		CP = BP;
 		

@@ -27,12 +27,12 @@ public class GeneralSketchGeneralVSktTests {
         }
 
         /** measurment for flow spreads **/
-//		for (int i : GeneralSketchGeneralVSkt.spreadMeasurementConfig) {
-//			GeneralSketchGeneralVSkt.	initSharing(i);
-//			GeneralSketchGeneralVSkt.	initJoining(i);
-//			GeneralSketchGeneralVSkt.	encodeSpread(dataStream.getDataStreamForFlowSpread());
-//			GeneralSketchGeneralVSkt.	estimateSpread(dataStream.getDataSummaryForFlowSpread());
-//		}
+        for (int i : GeneralSketchGeneralVSkt.spreadMeasurementConfig) {
+            GeneralSketchGeneralVSkt.initSharing(i);
+            GeneralSketchGeneralVSkt.initJoining(i);
+            GeneralSketchGeneralVSkt.encodeSpread(dataStream.getDataStreamForFlowSpread());
+            GeneralSketchGeneralVSkt.estimateSpread(dataStream.getDataSummaryForFlowSpread());
+        }
         System.out.println("DONE!****************************");
     }
 

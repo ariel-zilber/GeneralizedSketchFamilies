@@ -1,8 +1,6 @@
 import utils.HashingUtils;
 
 import java.util.BitSet;
-import java.util.HashSet;
-import java.util.Random;
 
 public class HyperLogLog extends GeneralDataStructure {
     /** parameters for HLL */
@@ -24,7 +22,20 @@ public class HyperLogLog extends GeneralDataStructure {
         }
         alpha = getAlpha(m);
     }
+    public HyperLogLog(HyperLogLog other) {
+        super();
+        this.HLLSize=other.HLLSize;
+        this.m=other.m;
+        this.maxRegisterValue=other.maxRegisterValue;
+        this.alpha=other.alpha;
+        this.HLLMatrix=new BitSet[other.m];
 
+        for (int i = 0; i < m; i++) {
+            this.HLLMatrix[i] = new BitSet(this.HLLSize);
+        }
+
+        //other.HLLMatrix;
+    }
     @Override
     public String getDataStructureName() {
         return "HyperLogLog";
@@ -45,9 +56,9 @@ public class HyperLogLog extends GeneralDataStructure {
     }
     @Override
     public GeneralDataStructure[] getsplit(int m,int w) {
-        HyperLogLog[]  B=new HyperLogLog[m];
+        VIHyperLogLog[]  B=new VIHyperLogLog[m];
         for(int i=0;i<m;i++) {
-            B[i]=new HyperLogLog(w,5);
+            B[i]=new VIHyperLogLog(w,5);
             for(int j=0;j<w/m;j++)
                 B[i].getHLLs()[j]=this.HLLMatrix[i*(w/m)+j];
         }
@@ -110,21 +121,34 @@ public class HyperLogLog extends GeneralDataStructure {
         return getValue(sketch);
     }
 
+    /**
+     *
+     * @param sketch L_f
+     * @return
+     */
     public int getValue(BitSet[] sketch) {
-        Double result = 0.0;
+        Double sum = 0.0;
         int zeros = 0;
         int len = sketch.length;
+        int lenSquared = len*2;
+        //xxx
+
+        // for j =0..m-1 do
+        //     sum := sum +2^-Lf[j]
+        // end for
+
         for (int i = 0; i < len; i++) {
             if (getBitSetValue(sketch[i]) == 0) zeros++;
-            result = result + Math.pow(2, -1.0 * getBitSetValue(sketch[i]));
+            sum = sum + Math.pow(2, -1.0 * getBitSetValue(sketch[i]));
         }
-        result = alpha * len * len / result;
-        if (result <= 5.0 / 2.0 * len) {			// small flows
-            result = 1.0 * len * Math.log(1.0 * len / Math.max(zeros, 1));
-        } else if (result > Integer.MAX_VALUE / 30.0) {
-            result = -1.0 * Integer.MAX_VALUE * Math.log(1 - result / Integer.MAX_VALUE);
+
+        sum = (alpha * lenSquared) / sum; //a_m m^2/sum
+        if (sum <= 5.0 / 2.0 * len) {			// small flows
+            sum = 1.0 * len * Math.log(1.0 * len / Math.max(zeros, 1));
+        } else if (sum > Integer.MAX_VALUE / 30.0) {
+            sum = -1.0 * Integer.MAX_VALUE * Math.log(1 - sum / Integer.MAX_VALUE);
         }
-        return result.intValue();
+        return sum.intValue();
     }
 
     public static int getBitSetValue(BitSet b) {
@@ -274,7 +298,7 @@ public class HyperLogLog extends GeneralDataStructure {
 
     @Override
     public GeneralDataStructure join(GeneralDataStructure gds) {
-        HyperLogLog hll = (HyperLogLog) gds;
+        VIHyperLogLog hll = (VIHyperLogLog) gds;
         for (int i = 0; i < m; i++) {
             if (getBitSetValue(HLLMatrix[i]) < getBitSetValue(hll.HLLMatrix[i]))
                 HLLMatrix[i] = hll.HLLMatrix[i];
@@ -283,7 +307,7 @@ public class HyperLogLog extends GeneralDataStructure {
     }
     @Override
     public GeneralDataStructure join(GeneralDataStructure gds,int w,int i) {
-        HyperLogLog hll = (HyperLogLog) gds;
+        VIHyperLogLog hll = (VIHyperLogLog) gds;
         for(int j=0;j<w;j++) {
             if (getBitSetValue(HLLMatrix[i]) < getBitSetValue(hll.HLLMatrix[i*w+j]))
                 HLLMatrix[i] = hll.HLLMatrix[i*w+j];

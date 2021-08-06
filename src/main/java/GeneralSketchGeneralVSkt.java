@@ -49,10 +49,7 @@ public class GeneralSketchGeneralVSkt {
 	public static int mValueHLL = 128;
 	public static int HLLSize = 5;
 
-	private static String dataStreamForFlowSize;
-	private static String dataSummaryForFlowSize;
-	private static String dataStreamForFlowSpread;
-	private static String dataSummaryForFlowSpread;
+
 
 	//
 	private static String resultsDir;
@@ -88,7 +85,7 @@ public class GeneralSketchGeneralVSkt {
 	                 break;
 	        case 2:  B = new FMSketch[1]; B[0] = new FMSketch(mValueFM, FMsketchSize);
 	                 break;
-	        case 3:  B = new HyperLogLog[1]; B[0] = new HyperLogLog(mValueHLL, HLLSize);
+	        case 3:  B = new VIHyperLogLog[1]; B[0] = new VIHyperLogLog(mValueHLL, HLLSize);
 	                 break;
 	        default: break;
 		}
@@ -125,12 +122,12 @@ public class GeneralSketchGeneralVSkt {
 	}
 	
 	// Generate vSkt(HLL) for flow size/spread measurement.
-	public static HyperLogLog[] generateHyperLogLog() {
+	public static VIHyperLogLog[] generateHyperLogLog() {
 		m = mValueHLL;
 		u = HLLSize;
 		w = M / u;
-		HyperLogLog[] B = new HyperLogLog[1];
-		B[0] = new HyperLogLog(w, HLLSize);
+		VIHyperLogLog[] B = new VIHyperLogLog[1];
+		B[0] = new VIHyperLogLog(w, HLLSize);
 		return B;
 	}
 	

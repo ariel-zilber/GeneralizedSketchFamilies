@@ -136,20 +136,20 @@ public class GeneralUnionGeneralSketchBloom {
     }
 
     // Generate bSkt(HLL) for flow size/spread measurement.
-    public static HyperLogLog[][] generateHyperLogLog() {
+    public static VIHyperLogLog[][] generateHyperLogLog() {
         m = mValueHLL;
         u = HLLSize * mValueHLL;
         w = (M / u) / 1;
-        HyperLogLog[][] B = new HyperLogLog[1][w];
+        VIHyperLogLog[][] B = new VIHyperLogLog[1][w];
         for (int i = 0; i < 1; i++) {
             for (int j = 0; j < w; j++) {
-                B[i][j] = new HyperLogLog(mValueHLL, HLLSize);
+                B[i][j] = new VIHyperLogLog(mValueHLL, HLLSize);
             }
         }
-        HyperLogLog[][][] BP = new HyperLogLog[periods][1][w];
+        VIHyperLogLog[][][] BP = new VIHyperLogLog[periods][1][w];
         for (int t = 0; t < periods; t++) {
             for (int j = 0; j < w; j++)
-                BP[t][0][j] = new HyperLogLog(mValueHLL, HLLSize);
+                BP[t][0][j] = new VIHyperLogLog(mValueHLL, HLLSize);
         }
         CP = BP;
         return B;

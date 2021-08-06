@@ -1,15 +1,11 @@
 
+import utils.HashingUtils;
 import utils.MeasurementUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Scanner;
-import java.util.Set;
-
+import java.util.*;
 
 /**
  * A general framework for vSketch family. The elementary data structures to be plugged into can be counter, bitmap, FM sketch, HLL sketch. Specifically, we can
@@ -18,7 +14,7 @@ import java.util.Set;
  * @author Youlin
  */
 
-public class GeneralTimeGeneralvSkt {
+public class GeneralSketchHyperLogLogGeneralVSkt {
     public static Random rand = new Random();
 
     public static int n = 0;                        // total number of packets
@@ -68,7 +64,7 @@ public class GeneralTimeGeneralvSkt {
     private static String resultsDir;
 
     public static void setResultsDir(String resultsDir) {
-        GeneralTimeGeneralvSkt.resultsDir = resultsDir;
+        GeneralSketchHyperLogLogGeneralVSkt.resultsDir = resultsDir;
     }
 
 
@@ -110,7 +106,17 @@ public class GeneralTimeGeneralvSkt {
                 C = generateFMsketch();
                 break;
             case 3:
-                C = generateHyperLogLog();
+                hyperLogLogMode();
+
+                //
+                VIHyperLogLog[][] BP = new VIHyperLogLog[periods][1];
+                for (int t = 0; t < periods; t++) {
+                    BP[t]= hyperloglogTimePeriodSketch();//new VIHyperLogLog(w, HLLSize);
+                }
+                CP = BP;
+
+                //
+                C= hyperloglogTimePeriodSketch();
                 break;
             default:
                 break;
@@ -167,22 +173,33 @@ public class GeneralTimeGeneralvSkt {
 
         return B;
     }
-
-    // Generate vSkt(HLL) for flow size/spread measurement.
-    public static VIHyperLogLog[] generateHyperLogLog() {
+    private static  void hyperLogLogMode(){
         m = mValueHLL;
         u = HLLSize;
         w = M / u;
+    }
+    private static VIHyperLogLog[] hyperloglogTimePeriodSketch(){
+
+
         VIHyperLogLog[] B = new VIHyperLogLog[1];
         B[0] = new VIHyperLogLog(w, HLLSize);
+        return B;
+    }
+
+
+    // Generate vSkt(HLL) for flow size/spread measurement.
+    public static VIHyperLogLog[] generateHyperLogLog() {
+
+        hyperLogLogMode();
+
 
         VIHyperLogLog[][] BP = new VIHyperLogLog[periods][1];
         for (int t = 0; t < periods; t++) {
-            BP[t][0] = new VIHyperLogLog(w, HLLSize);
+            BP[t]= hyperloglogTimePeriodSketch();//new VIHyperLogLog(w, HLLSize);
         }
         CP = BP;
 
-        return B;
+        return hyperloglogTimePeriodSketch();
     }
 
     // Generate random seeds for Sharing approach.
@@ -291,25 +308,62 @@ public class GeneralTimeGeneralvSkt {
      * Estiamte flow spreads.
      */
     public static void estimateSpread(String filePath) throws FileNotFoundException {
-        System.out.println("Estimating Flow CARDINALITY...");
-        Scanner sc = new Scanner(new File(filePath + periods + "\\outputdstCard.txt"));
-        System.out.println(filePath + periods + "\\outputdstCard.txt");
 
-        String resultFilePath = resultsDir + "VSketch\\spread\\v" + C[0].getDataStructureName()
-                + "_M_" + M / 1024 / 1024 + "_u_" + u + "_m_" + m + "_TT_" + periods;
+        // INIT
+        System.out.println("Estimating Flow CARDINALITY...");
+        Scanner sc = new Scanner(new File(filePath));
+        String resultFilePath = resultsDir + "\\VSketch\\spread\\v" + C[0].getDataStructureName()
+                + "_M_" + M / 1024 / 1024 + "_u_" + u + "_m_" + m;
         PrintWriter pw = new PrintWriter(new File(resultFilePath));
-        System.out.println("Result directory: " + resultFilePath);
+
+        // INPUT:
+
+        // S - number of registers used by virtual HLL sketch
+        int usedVirtualRegisters = m;
+
+        // m - number of registers in physical register array
+        int usedPhysicalRegisters = w;
+
+        // {M_j} j in [1,t]
+        VIHyperLogLog[] mIntersection ;
+        mIntersection = new VIHyperLogLog[1];
+        mIntersection[0] = new VIHyperLogLog(mValueHLL, HLLSize);
+
+
+
+        for (int t = 0; t < periods; t++) {
+            mIntersection[0] = (VIHyperLogLog) mIntersection[0].intesection(CP[t][0]);
+        }
+
+
+        // {A_j} j in [1,t]
+
+        // STEP 1:
+        // M intersection <-M_1/\M_2/\M_3.../\M_t
+        // estimate n_s^* in M intersection
+
+        // STEP 2:
+        // A intersection <-A_1/\A_2/\A_3.../\A_t
+
+        // STEP 3:
+        // STEP 4:
+
+
         for (int t = 0; t < m; t++) {
             B[0] = B[0].join(C[0], w / m, t);
         }
         // Estimate noise.
         int totalSum = B[0].getValue();
+        n = 0;
         while (sc.hasNextLine()) {
             String entry = sc.nextLine();
             String[] strs = entry.split("\\s+");
-            long flowid = Long.parseLong(MeasurementUtils.getSperadFlowIDAndElementID(strs, false)[0]);
+            long flowid = Long.parseLong(MeasurementUtils.getSpreadFlowIDAndElementID(strs, false)[0]);
+            //
+            //
+
             int num = Integer.parseInt(strs[strs.length - 1]);
-            // Get the estimate of the virtual data structure.
+            n += num;
             int virtualSum = C[0].getValueSegment(flowid, S, w / m);
             Double estimate = Math.max(1.0 * (virtualSum - 1.0 * m * totalSum / w), 1);
             if (estimate < 0.0) {
@@ -319,5 +373,8 @@ public class GeneralTimeGeneralvSkt {
         }
         sc.close();
         pw.close();
+        // obtain estimation accuracy results
+        System.out.println("Total flow spread: " + n);
     }
+
 }

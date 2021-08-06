@@ -153,7 +153,198 @@ flow spread: defined as the number of distinct elements in each flow, where
 \end_layout
 
 \begin_layout Standard
+\begin_inset Formula $ $
+\end_inset
 
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $ $
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+VI-HLL persistent soread estimator for flow dst
+\end_layout
+
+\begin_layout Standard
+This algorithm was taken from the second article:
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Step 1:
+\series default
+ Obtain the virtual intersection HLL sketch of flow dst:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $M_{\cap}\leftarrow M_{1}\wedge M_{2}...\wedge M_{t}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Estimate 
+\begin_inset Formula $n_{s}^{*}$
+\end_inset
+
+ in 
+\begin_inset Formula $M_{\cap}$
+\end_inset
+
+ by :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $n_{s}^{\mathcircumflex*}=f_{t}(s,M_{\cap},\{M_{j}\}_{j\in[1,t]})=argmax_{n^{*}}\{lnL\}=\{n^{*}|\frac{\partial}{\partial n^{*}}lnL=0\}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\frac{\partial}{\partial n^{*}}lnL=\sum_{k=0}^{H}N_{k}$
+\end_inset
+
+
+\begin_inset Formula $\frac{\frac{\partial}{\partial n^{*}}P(M_{\cap}[i]=k)}{P(M_{\cap}[i]=k)}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We know that:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $P(M_{\cap}[i]=k)=\begin{cases}
+G_{s}(n^{*},k) & k=0\\
+G_{s}(n^{*},k)-G_{s}(n^{*},k-1) & 0<k<H\\
+1-G_{s}(n^{*},k-1) & k=H\\
+0 & k>H
+\end{cases}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\frac{\partial}{\partial n^{*}}P(M_{\cap}[i]=k)=\begin{cases}
+\frac{\partial}{\partial n^{*}}G_{s}(n^{*},k) & k=0\\
+\frac{\partial}{\partial n^{*}}(G_{s}(n^{*},k)-G_{s}(n^{*},k-1)) & 0<k<H\\
+-\frac{\partial}{\partial n^{*}}G_{s}(n^{*},k-1) & k=H
+\end{cases}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $ $
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\frac{\partial}{\partial n^{*}}G_{s}(n^{*},k)=\frac{1}{s*2^{k}}e^{-\frac{n^{*}}{s*2^{k}}}*((1+\sum_{j=1}^{t}(e^{\frac{n_{j}-n^{*}}{s*2^{k}}}-1)^{-1})*(\prod_{j=1}^{t}(1-e^{-\frac{(n_{j}-n^{*})}{s*2^{k}}}))-1)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $G_{s}(n_{1},n_{2},...,n_{t},n^{*},k)=e^{-\frac{n^{*}}{s*2^{k}}}*(1-\prod_{j=1}^{t}(1-e^{-\frac{(n_{j}-n^{*})}{s*2^{k}}}))$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+also: 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $α=\frac{s!}{N_{0}!N_{1}...N_{H}!}$
+\end_inset
+
+,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $ $
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+How to calculate??:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $n_{j}-$
+\end_inset
+
+cardinality of 
+\begin_inset Formula $S_{j}$
+\end_inset
+
+.Just calculate the cardianilty
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $s\,-\,$
+\end_inset
+
+ size of the array
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $N_{k}\,-\,$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $H-2^{h}-1$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $h-\,size\,of\,register$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $n^{*}-$
+\end_inset
+
+ belongs to value range [0,max{
+\begin_inset Formula $|S_{K}|$
+\end_inset
+
+}]
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Step 2:
+\series default
+ 
 \end_layout
 
 \end_body
