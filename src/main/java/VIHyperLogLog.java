@@ -181,6 +181,7 @@ public class VIHyperLogLog extends GeneralDataStructure {
     @Override
     public void encodeSegment(long flowID, long elementID, int[] s, int w) {
         int ms = s.length;
+
         int j = ((HashingUtils.FNVHash1(flowID ^ elementID)) % ms + ms) % ms;
         int k = (HashingUtils.intHash(HashingUtils.FNVHash1(flowID) ^ s[j]) % w + w) % w;
         int i = j * w + k;
@@ -323,7 +324,6 @@ public class VIHyperLogLog extends GeneralDataStructure {
     }
 
 
-
     public GeneralDataStructure intesection(GeneralDataStructure gds) {
         VIHyperLogLog hll = (VIHyperLogLog) gds;
         for (int i = 0; i < m; i++) {
@@ -332,12 +332,16 @@ public class VIHyperLogLog extends GeneralDataStructure {
         }
         return this;
     }
-    public GeneralDataStructure intesection(GeneralDataStructure gds, int w, int i) {
+
+    public GeneralDataStructure intesection(GeneralDataStructure gds, int w, int[] s, long flowID) {
         VIHyperLogLog hll = (VIHyperLogLog) gds;
-        for (int j = 0; j < w; j++) {
-            if (getBitSetValue(HLLMatrix[i]) > getBitSetValue(hll.HLLMatrix[i * w + j]))
-                HLLMatrix[i] = hll.HLLMatrix[i * w + j];
+        BitSet[] sketch = hll.getLogicalEstimator(flowID, s, w);
+
+        for (int i = 0; i < m; i++) {
+            if (getBitSetValue(HLLMatrix[i]) > getBitSetValue(sketch[i]))
+                HLLMatrix[i] = sketch[i];
         }
+
         return this;
     }
 }

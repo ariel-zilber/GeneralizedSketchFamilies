@@ -1,11 +1,10 @@
-
-import utils.HashingUtils;
 import utils.MeasurementUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.*;
+
 
 /**
  * A general framework for vSketch family. The elementary data structures to be plugged into can be counter, bitmap, FM sketch, HLL sketch. Specifically, we can
@@ -14,7 +13,7 @@ import java.util.*;
  * @author Youlin
  */
 
-public class GeneralSketchHyperLogLogGeneralVSkt {
+public class GeneralTimeGeneralvSktIHLL {
     public static Random rand = new Random();
 
     public static int n = 0;                        // total number of packets
@@ -64,7 +63,7 @@ public class GeneralSketchHyperLogLogGeneralVSkt {
     private static String resultsDir;
 
     public static void setResultsDir(String resultsDir) {
-        GeneralSketchHyperLogLogGeneralVSkt.resultsDir = resultsDir;
+        GeneralTimeGeneralvSktIHLL.resultsDir = resultsDir;
     }
 
 
@@ -106,17 +105,7 @@ public class GeneralSketchHyperLogLogGeneralVSkt {
                 C = generateFMsketch();
                 break;
             case 3:
-                hyperLogLogMode();
-                
-                //
-                VIHyperLogLog[][] BP = new VIHyperLogLog[periods][1];
-                for (int t = 0; t < periods; t++) {
-                    BP[t]= hyperloglogTimePeriodSketch();//new VIHyperLogLog(w, HLLSize);
-                }
-                CP = BP;
-                
-                //
-                C= hyperloglogTimePeriodSketch();
+                C = generateHyperLogLog();
                 break;
             default:
                 break;
@@ -173,33 +162,22 @@ public class GeneralSketchHyperLogLogGeneralVSkt {
 
         return B;
     }
-    private static  void hyperLogLogMode(){
-        m = mValueHLL;
-        u = HLLSize;
-        w = M / u;
-    }
-    private static VIHyperLogLog[] hyperloglogTimePeriodSketch(){
-        
-
-        VIHyperLogLog[] B = new VIHyperLogLog[1];
-        B[0] = new VIHyperLogLog(w, HLLSize);
-        return B;
-    }
-    
 
     // Generate vSkt(HLL) for flow size/spread measurement.
     public static VIHyperLogLog[] generateHyperLogLog() {
-
-        hyperLogLogMode();
-
+        m = mValueHLL;
+        u = HLLSize;
+        w = M / u;
+        VIHyperLogLog[] B = new VIHyperLogLog[1];
+        B[0] = new VIHyperLogLog(w, HLLSize);
 
         VIHyperLogLog[][] BP = new VIHyperLogLog[periods][1];
         for (int t = 0; t < periods; t++) {
-            BP[t]= hyperloglogTimePeriodSketch();//new VIHyperLogLog(w, HLLSize);
+            BP[t][0] = new VIHyperLogLog(w, HLLSize);
         }
         CP = BP;
 
-        return hyperloglogTimePeriodSketch();
+        return B;
     }
 
     // Generate random seeds for Sharing approach.
@@ -309,49 +287,30 @@ public class GeneralSketchHyperLogLogGeneralVSkt {
      */
     public static void estimateSpread(String filePath) throws FileNotFoundException {
 
-        // INIT
-        System.out.println("Estimating Flow CARDINALITY...");
-        Scanner sc = new Scanner(new File(filePath));
-        String resultFilePath = resultsDir + "\\VSketch\\spread\\v" + C[0].getDataStructureName()
-                + "_M_" + M / 1024 / 1024 + "_u_" + u + "_m_" + m;
-        PrintWriter pw = new PrintWriter(new File(resultFilePath));
-
-        // INPUT:
-
-        // S - number of registers used by virtual HLL sketch
-        int usedVirtualRegisters = m;
-
-        // m - number of registers in physical register array
-        int usedPhysicalRegisters = w;
-
-        // {M_j} j in [1,t]
-        VIHyperLogLog[] mIntersection ;
-        mIntersection = new VIHyperLogLog[1];
-        mIntersection[0] = new VIHyperLogLog(mValueHLL, HLLSize);
+//		// INIT
+		System.out.println("Estimating Flow CARDINALITY...");
+		Scanner sc = new Scanner(new File(filePath));
+		String resultFilePath = resultsDir + "\\VSketch\\spread\\v" + C[0].getDataStructureName()
+				+ "_M_" + M / 1024 / 1024 + "_u_" + u + "_m_" + m;
+		PrintWriter pw = new PrintWriter(new File(resultFilePath));
+//
+//		// INPUT:
+//
+//		// S - number of registers used by virtual HLL sketch
+		int usedVirtualRegisters = m;
+//
+//		// m - number of registers in physical register array
+		int usedPhysicalRegisters = w;
+//
 
 
 
-        for (int t = 0; t < periods; t++) {
-            mIntersection[0] = (VIHyperLogLog) mIntersection[0].intesection(CP[t][0]);
-        }
 
 
-        // {A_j} j in [1,t]
-
-        // STEP 1:
-        // M intersection <-M_1/\M_2/\M_3.../\M_t
-        // estimate n_s^* in M intersection
-
-        // STEP 2:
-        // A intersection <-A_1/\A_2/\A_3.../\A_t
-        
-        // STEP 3:
-        // STEP 4:
 
 
-        for (int t = 0; t < m; t++) {
-            B[0] = B[0].join(C[0], w / m, t);
-        }
+        //
+        System.out.println("Result directory: " + resultFilePath);
         // Estimate noise.
         int totalSum = B[0].getValue();
         n = 0;
@@ -359,10 +318,41 @@ public class GeneralSketchHyperLogLogGeneralVSkt {
             String entry = sc.nextLine();
             String[] strs = entry.split("\\s+");
             long flowid = Long.parseLong(MeasurementUtils.getSpreadFlowIDAndElementID(strs, false)[0]);
-            //
+            int num = Integer.parseInt(strs[strs.length-1]);
             //
 
-            int num = Integer.parseInt(strs[strs.length - 1]);
+
+
+            // STEP 1:
+            // M intersection <-M_1/\M_2/\M_3.../\M_t
+            // estimate n_s^* in M intersection
+            VIHyperLogLog[] mIntersection ;
+            mIntersection = new VIHyperLogLog[1];
+            mIntersection[0] = new VIHyperLogLog(mValueHLL, HLLSize);
+
+            // {M_j} j in [1,t]
+            for (int t = 0; t < periods; t++) {
+                mIntersection[0] = (VIHyperLogLog) mIntersection[0].intesection(CP[t][0],w / m,S, flowid);
+            }
+
+
+            // STEP 2:
+            // A intersection <-A_1/\A_2/\A_3.../\A_t
+
+            // {A_j} j in [1,t]
+            VIHyperLogLog[] aIntersection ;
+            aIntersection = new VIHyperLogLog[1];
+            aIntersection[0] = new VIHyperLogLog(w, HLLSize);
+            for (int t = 0; t < periods; t++) {
+                aIntersection[0] = (VIHyperLogLog) aIntersection[0].intesection(CP[t][0]);
+            }
+
+
+
+            // STEP 3:
+            // STEP 4:
+
+            //
             n += num;
             int virtualSum = C[0].getValueSegment(flowid, S, w / m);
             Double estimate = Math.max(1.0 * (virtualSum - 1.0 * m * totalSum / w), 1);
